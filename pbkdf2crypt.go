@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+func d(b []byte, n string) {
+	fmt.Printf("%s (%d) = %#v (%s)\n", n, len(b), b, b)
+}
+
 func Validate(password string, hash string) (bool, error) {
 	parts := strings.Split(hash, "$")
 	if parts[1] != "p5k2" {
@@ -30,7 +34,9 @@ func Validate(password string, hash string) (bool, error) {
 	rk := pbkdf2.Key([]byte(password), salt, iterations, 24, sha1.New)
 
 	buf := new(bytes.Buffer)
-	encoder := base64.NewEncoder(base64.StdEncoding, buf)
+	pythonEncoding := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./"
+
+	encoder := base64.NewEncoder(base64.NewEncoding(pythonEncoding), buf)
 	encoder.Write(rk)
 	encoder.Close()
 
