@@ -17,8 +17,11 @@ func d(b []byte, n string) {
 
 func Validate(password string, hash string) (bool, error) {
 	parts := strings.Split(hash, "$")
+	if len(parts) != 5 {
+		return false, errors.New("pbkdf2crypt should have 5 parts")
+	}
 	if parts[1] != "p5k2" {
-		return false, errors.New("hash is not a pbkdf2")
+		return false, errors.New("hash is not a pbkdf2crypt")
 	}
 	var iterations int
 	var salt []byte
